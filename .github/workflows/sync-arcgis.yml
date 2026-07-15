@@ -3,30 +3,8 @@ name: Sync IEAT Stations to ArcGIS Online
 on:
   workflow_dispatch:
 
+  schedule:
+    - cron: "*/5 * * * *"
+
 permissions:
   contents: read
-
-jobs:
-  sync:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "pip"
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Synchronize IEAT stations
-        env:
-          ARCGIS_USERNAME: ${{ secrets.ARCGIS_USERNAME }}
-          ARCGIS_PASSWORD: ${{ secrets.ARCGIS_PASSWORD }}
-          ARCGIS_ITEM_ID: ${{ secrets.ARCGIS_ITEM_ID }}
-        run: python sync_arcgis.py
